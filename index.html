@@ -368,9 +368,10 @@
     top: 0;
     height: 100vh;
     display: flex;
-    align-items: center; /* list + frame sit in the middle of the screen while it's held */
+    align-items: flex-start; /* list and frame share a top edge, as in Paper */
     gap: var(--gutter);
-    padding: 0 var(--margin);
+    /* the list + frame block sits in the middle of the screen while it's held */
+    padding: calc((100vh - (3 * var(--col) + 2 * var(--gutter)) * 575 / 460) / 2) var(--margin) 0;
     overflow: hidden;
   }
   .vehicles .grid-guides { top: 0; bottom: 0; }
@@ -464,7 +465,6 @@
     list-style: none;
   }
   .vehicle-list li {
-    padding: var(--gutter) 0 30px;
     font-family: var(--font-title);
     font-weight: 300;
     font-size: 72px;
