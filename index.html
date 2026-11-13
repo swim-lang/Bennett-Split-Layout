@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bennett</title>
+<style>
+  @font-face {
+    font-family: "Malamocco";
+    src: url("assets/fonts/Malamocco-Book-Trial.otf") format("opentype");
+    font-weight: 350; /* Book — used for all Malamocco text */
+  }
+  @font-face {
+    font-family: "Malamocco";
+    src: url("assets/fonts/Malamocco-Regular-Trial.otf") format("opentype");
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: "Successor";
+    src: url("assets/fonts/Successor-Light-Trial.otf") format("opentype");
+    font-weight: 300;
+  }
+
+  :root {
+    --color-blue: #2c4a9b;
+    --color-off-white: #f2efdd;
+    --color-black: #161616;
+    --font-title: "Successor", serif;   /* titles + subheaders */
+    --font-body: "Malamocco", serif;    /* body copy */
+
+    --margin: 20px;
+    --gutter: 10px;
+    --cols: 9;
+    /* width of one grid column */
+    --col: calc((100vw - (2 * var(--margin)) - ((var(--cols) - 1) * var(--gutter))) / var(--cols));
+    /* wordmark proportions (viewBox 3000 x 442) */
+    --mark-h: calc(var(--col) * 442 / 3000);
+    --mark-stroke: calc(var(--col) * 22 / 3000);
+    --mark-radius: calc(var(--col) * 118.73 / 3000);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+
+
+  body {
+    background: var(--color-blue);
+    color: var(--color-off-white);
+    font-family: var(--font-body);
+    font-weight: 350;
+    overflow-x: clip; /* clip (not hidden) so position: sticky keeps working */
+  }
+
+  /* ---------- Hero screen (first viewport) ---------- */
+  .hero-screen {
+    position: relative;
+    height: 100vh;
+    padding: var(--margin);
+    display: flex;
+    flex-direction: column;
+    background: var(--color-blue);
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+  }
+  /* headline sits over the photo on the left half */
+  .hero-headline {
+    width: 50%;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-right: 20px;
+  }
+  /* split hero: text on the right half of the page */
+  .hero-text {
+    width: 50%;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 40px;
+    padding-left: 20px;
+  }
+  /* photo: left half of the page, full bleed (no margins) */
+  .hero-photo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 50vw;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .hero-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* label + subheader grouped: right half, left-aligned with the paragraph,
+     vertically centered on the page */
+  .hero-center {
+    position: absolute;
+    top: 50%;
+    left: calc(50% + 20px);
+    transform: translateY(-50%);
+    width: 620px;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--gutter);
+    text-align: left;
+  }
+  .eyebrow {
+    font-family: var(--font-body);
+    font-weight: 350;
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+  .headline {
+    font-family: var(--font-title);
+    font-weight: 300;
+    font-size: 24px;
+    text-transform: uppercase;
+  }
+  .subhead {
+    font-family: var(--font-title);
+    font-weight: 300;
+    font-size: 30px;
+    text-transform: uppercase;
+  }
+  .body-copy {
+    font-family: var(--font-body);
+    font-weight: 350;
+    font-size: 18px;
+    /* starts 20px right of the split, ends at the right edge of column 8 */
+    width: calc(8 * var(--col) + 7 * var(--gutter) - 50vw);
+  }
+
+  /* ---------- Grid guides (press G to toggle) ---------- */
+  .grid-guides {
+    position: absolute;
+    top: var(--margin);
+    bottom: var(--margin);
+    left: var(--margin);
+    right: var(--margin);
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    gap: var(--gutter);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .grid-guides div {
+    background: color-mix(in srgb, var(--color-off-white) 8%, transparent);
+    border-left: 1px solid color-mix(in srgb, var(--color-off-white) 35%, transparent);
+    border-right: 1px solid color-mix(in srgb, var(--color-off-white) 35%, transparent);
+  }
+  .grid-guides--blue { top: 0; bottom: 0; }
+  .grid-guides--blue div {
+    background: color-mix(in srgb, var(--color-blue) 8%, transparent);
+    border-left-color: color-mix(in srgb, var(--color-blue) 35%, transparent);
+    border-right-color: color-mix(in srgb, var(--color-blue) 35%, transparent);
+  }
+  body.no-grid .grid-guides { display: none; }
+
+  /* ---------- Section: Montana advantage (off-white) ---------- */
+  .advantage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    padding: 120px var(--margin);
+    background: var(--color-off-white);
+  }
+  /* heading lockup: line 1 locked left, line 2 locked right */
+  .advantage-heading {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-title);
+    font-weight: 300;
+    font-size: 72px;
+    text-transform: uppercase;
+    color: var(--color-blue);
+  }
+  .advantage-heading span { display: block; }
+  .advantage-heading .line-left { align-self: flex-start; }
+  .advantage-heading .line-right { align-self: flex-end; text-align: right; }
+  /* paragraphs on columns 1–3, image frame on columns 5–8 */
+  .advantage-body-row {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: calc(var(--col) + 2 * var(--gutter)); /* skips column 4 */
+  }
+  .advantage-image {
+    width: calc(4 * var(--col) + 3 * var(--gutter));
+    aspect-ratio: 616.67 / 411;
+    flex-shrink: 0;
+    background: #cccccc;
+    overflow: hidden;
+  }
+  .advantage-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top; /* any cropping comes off the bottom */
+  }
+  .advantage-body-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: calc(3 * var(--col) + 2 * var(--gutter)); /* columns 1–3 */
+    flex-shrink: 0;
+  }
+  .advantage-body-col p {
+    font-family: var(--font-body);
+    font-weight: 350;
+    font-size: 16px;
+    color: var(--color-black);
+  }
+
+  /* ---------- Nav ---------- */
+  .nav {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .wordmark {
+    display: block;
+    width: var(--col);
+    height: var(--mark-h);
+    flex-shrink: 0;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-off-white);
+    text-decoration: none;
+  }
+  .nav-links a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* CTA uses the same silhouette as the wordmark */
+  .cta {
+    display: flex;
+    width: var(--col);
+    height: var(--mark-h);
+    padding: var(--mark-stroke);
+    background: var(--color-black);
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+  .cta span {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-off-white);
+    border-radius: var(--mark-radius);
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--color-black);
+    white-space: nowrap;
+  }
+  .cta:hover span { background: #fff; }
+
+  /* larger button, same wordmark silhouette, two columns wide */
+  .btn-2col {
+    --btn-w: calc(2 * var(--col) + var(--gutter));
+    display: flex;
+    width: var(--btn-w);
+    height: calc(var(--btn-w) * 442 / 3000);
+    padding: calc(var(--btn-w) * 22 / 3000);
+    background: var(--color-black);
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+  .btn-2col span {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-off-white);
+    border-radius: calc(var(--btn-w) * 118.73 / 3000);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-black);
+    white-space: nowrap;
+  }
+  .btn-2col:hover span { background: #fff; }
+  .advantage-body-col .btn-2col { margin-top: 20px; }
+
+
+  /* ---------- Section: Situations (blue) ---------- */
+  .situations {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    padding: 120px var(--margin);
+    background: var(--color-blue);
+  }
+  .situation {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start; /* title and body aligned by top */
+    gap: calc(2 * var(--col) + 3 * var(--gutter)); /* skips columns 4–5 */
+    padding-top: var(--gutter);
+    border-top: 1px solid color-mix(in srgb, var(--color-off-white) 35%, transparent);
+  }
+  .situation h3,
+  .situation p {
+    width: calc(3 * var(--col) + 2 * var(--gutter)); /* 3 columns */
+    flex-shrink: 0;
+    color: var(--color-off-white);
+  }
+  .situation h3 {
+    font-family: var(--font-title);
+    font-weight: 300;
+    font-size: 30px;
+    text-transform: uppercase;
+  }
+  .situation p {
+    font-family: var(--font-body);
+    font-weight: 350;
+    font-size: 16px;
+  }
+  .situations .grid-guides { top: 0; bottom: 0; }
+
+
+  /* ---------- Section: Vehicles (off-white) ---------- */
+  .vehicles {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: calc(var(--col) + 2 * var(--gutter)); /* skips column 5 */
+    padding: 120px var(--margin);
+    background: var(--color-off-white);
+  }
+  .vehicles .grid-guides { top: 0; bottom: 0; }
+  /* empty columns 1–4 (the title now appears over the growing photo) */
+  .vehicles-spacer {
+    width: calc(4 * var(--col) + 3 * var(--gutter));
+    flex-shrink: 0;
+  }
+
+  /* ---------- Scroll moment: photo grows to full screen ---------- */
+  .grow {
+    position: relative;
+    height: 300vh; /* scroll distance that drives the animation */
+  }
+  .grow-stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    /* the photo starts straddling the blue → off-white change */
+    background: linear-gradient(to bottom, var(--color-blue) 50%, var(--color-off-white) 50%);
+  }
+  .grow-photo {
+    position: absolute;
+    overflow: hidden;
+    /* start state: columns 4–6, 3:2, centred on the colour change (JS animates from here) */
+    width: calc(3 * var(--col) + 2 * var(--gutter));
+    aspect-ratio: 3 / 2;
+    left: calc(var(--margin) + 3 * (var(--col) + var(--gutter)));
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .grow-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .grow-fade {
+    position: absolute;
+    inset: 0;
+    background: rgba(22, 22, 22, 0.55); /* even dim so the centred title reads */
+    opacity: 0;
+  }
+  .grow-title {
+    position: absolute;
+    left: 50%;
+    top: 50%; /* centred on the screen */
+    width: calc(4 * var(--col) + 3 * var(--gutter)); /* 4 columns wide */
+    text-align: center;
+    font-family: var(--font-title);
+    font-weight: 300;
+    font-size: 72px;
+    text-transform: uppercase;
+    color: var(--color-off-white);
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 24px));
+  }
+  .vehicle-list {
+    position: relative;
+    z-index: 1;
+    width: calc(3 * var(--col) + 2 * var(--gutter)); /* columns 6–8 */
+    flex-shrink: 0;
+    list-style: none;
+  }
+  .vehicle-list li {
+    padding: var(--gutter) 0 30px;
+    border-top: 1px solid color-mix(in srgb, var(--color-blue) 35%, transparent);
+    font-family: var(--font-title);
+    font-weight: 300;
+    font-size: 30px;
+    text-transform: uppercase;
+    color: var(--color-black);
+  }
+
+  /* live size readout */
+  .readout {
+    position: fixed;
+    right: var(--margin);
+    bottom: var(--margin);
+    z-index: 2;
+    font: 12px ui-monospace, Menlo, monospace;
+    background: var(--color-black);
+    color: var(--color-off-white);
+    padding: 6px 10px;
+  }
+  body.no-grid .readout { display: none; }
+</style>
+</head>
+<body>
+  <header class="hero-screen">
+  <div class="grid-guides" aria-hidden="true">
+    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+  </div>
+
+  <div class="hero-photo">
+    <img src="assets/hero-photo.jpg" alt="Classic cars inside a restoration garage">
+  </div>
+
+  <nav class="nav">
+    <a href="/" aria-label="Bennett home">
+      <svg class="wordmark" viewBox="0 0 3000 442" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bennett">
+        <path fill="var(--color-off-white)" d="M2978.013,140.967v160.066c0,65.565-53.121,118.73-118.73,118.73H140.717c-65.565,0-118.73-53.165-118.73-118.73v-160.066c0-65.61,53.165-118.73,118.73-118.73h2718.566C2924.892,22.237,2978.013,75.357,2978.013,140.967Z"/>
+        <path fill="var(--color-black)" d="M0,.25v441.5h3000V.25H0ZM2978.013,301.033c0,65.565-53.121,118.73-118.73,118.73H140.717c-65.565,0-118.73-53.165-118.73-118.73v-160.066c0-65.61,53.165-118.73,118.73-118.73h2718.566c65.609,0,118.73,53.12,118.73,118.73V301.033Z"/>
+        <g fill="var(--color-black)">
+          <path d="M559.461,110.168h164.021v26.914h-132.356v49.538h85.741v26.915h-85.741v91.367h132.356v26.914h-164.021V110.168Z"/>
+          <path d="M970.578,331.816V110.168h31.665l128.238,170.669V110.168h30.081v221.648h-31.664l-128.239-170.669v170.669H970.578Z"/>
+          <path d="M1409.559,331.816V110.168h31.664l128.239,170.669V110.168h30.081v221.648h-31.664l-128.239-170.669v170.669H1409.559Z"/>
+          <path d="M1856.9,110.168h164.019v26.914h-132.356v49.538h85.743v26.915h-85.743v91.367h132.356v26.914h-164.019V110.168Z"/>
+          <path d="M2311.91,137.082h-94.993v-26.914h221.648v26.914h-94.99v194.734h-31.665V137.082Z"/>
+          <path d="M2719.454,137.082h-94.993v-26.914h221.648v26.914h-94.99v194.734h-31.665V137.082Z"/>
+          <path d="M153.897,110.168h102.592c32.613,0,58.261,17.063,58.261,49.361v5.066c0,15.832-5.383,25.034-18.682,35.483,21.532,10.765,31.348,28.937,31.348,48.885v20.511c0,32.297-25.648,62.342-58.262,62.342h-115.257V110.168ZM283.086,164.384v-5.066c0-11.96-12.666-22.236-30.713-22.236h-66.812v49.538h66.812C270.42,186.62,283.086,176.345,283.086,164.384ZM295.752,269.474v-20.511c0-18.365-12.666-35.428-30.714-35.428h-79.477v91.367h79.477C283.086,304.902,295.752,287.839,295.752,269.474Z"/>
+        </g>
+      </svg>
+    </a>
+
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="#montana-registration">Montana Registration</a></li>
+        <li><a href="#our-firm">Our Firm</a></li>
+        <li><a href="#questions">Questions</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a class="cta" href="#contact"><span>Speak with Bennett</span></a>
+    </div>
+  </nav>
+
+  <main class="hero">
+    <div class="hero-headline">
+      <h1 class="headline">For those who know</h1>
+    </div>
+    <div class="hero-text">
+    <p class="body-copy">Bennett helps clients establish Montana LLCs and manage vehicle titling and registration, with legal guidance shaped around how and where their vehicles are owned and used. An established name, with a distinctly personal approach.</p>
+    </div>
+  </main>
+
+  <div class="hero-center">
+    <p class="eyebrow">Est. 1997 · Missoula, Montana</p>
+    <p class="subhead">Montana vehicle registration.<br>Personal legal counsel.</p>
+  </div>
+  </header>
+
+  <section class="advantage" id="montana-registration">
+    <div class="grid-guides grid-guides--blue" aria-hidden="true">
+      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+    <h2 class="advantage-heading">
+      <span class="line-left">A Montana advantage.</span>
+      <span class="line-right">A considered approach.</span>
+    </h2>
+    <div class="advantage-body-row">
+    <div class="advantage-body-col">
+      <p>Montana’s lack of a general sales tax makes it a compelling place to explore vehicle ownership. Whether a Montana LLC is appropriate for you deserves a closer look.</p>
+      <p>We consider your circumstances, explain the relevant requirements, and help you understand the next steps. When the arrangement is right, we attend to the entity formation, title work, and registration.</p>
+      <a class="btn-2col" href="#montana-registration"><span>Understand the Montana approach</span></a>
+    </div>
+    <div class="advantage-image">
+      <img src="assets/advantage-photo.jpg" alt="Aerial view of a mountain valley with a road through green meadows">
+    </div>
+    </div>
+  </section>
+
+  <section class="situations">
+    <div class="grid-guides" aria-hidden="true">
+      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+    <div class="situation">
+      <h3>Before the purchase</h3>
+      <p>Considering a new acquisition? Speak with us early so ownership, registration, and documentation can be considered before the transaction is complete.</p>
+    </div>
+    <div class="situation">
+      <h3>A vehicle you<br>already own</h3>
+      <p>You do not have to be buying something new to explore Montana registration. We can review your current ownership and advise on the available next steps.</p>
+    </div>
+    <div class="situation">
+      <h3>Financing to<br>account for</h3>
+      <p>A financed vehicle brings additional requirements. We help you understand the lender permissions and documentation involved in ownership through an LLC.</p>
+    </div>
+    <div class="situation">
+      <h3>Another vehicle<br>in mind</h3>
+      <p>When you add a vehicle, we can review how it fits within your existing arrangement and help with the associated title and registration work.</p>
+    </div>
+    <div class="situation">
+      <h3>The details that<br>come around again</h3>
+      <p>Registration renewals and ongoing LLC requirements deserve consistent attention. We help you keep up with the obligations associated with your arrangement.</p>
+    </div>
+    <div class="situation">
+      <h3>When circumstances change</h3>
+      <p>A move, a sale, or a different approach to ownership may call for changes. We can assist with registration transitions and winding up an entity when it is no longer needed.</p>
+    </div>
+  </section>
+
+  <section class="grow" aria-labelledby="grow-title">
+    <div class="grow-stage">
+      <div class="grow-photo">
+        <img src="assets/hero-photo.jpg" alt="Classic cars inside a restoration garage">
+        <div class="grow-fade"></div>
+      </div>
+      <h2 class="grow-title" id="grow-title">The vehicle may change; the care given remains personal.</h2>
+    </div>
+  </section>
+
+  <section class="vehicles">
+    <div class="grid-guides grid-guides--blue" aria-hidden="true">
+      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+    <div class="vehicles-spacer" aria-hidden="true"></div>
+    <ul class="vehicle-list">
+      <li>Cars</li>
+      <li>Motorhomes &amp; RVs</li>
+      <li>Motorcycles</li>
+      <li>Boats &amp; ATVs</li>
+      <li>Aircraft</li>
+    </ul>
+  </section>
+
+  <div class="readout" id="readout"></div>
+
+  <script>
+    // Grid guides + size readout are a design aid: shown on the local preview,
+    // hidden by default on the live site (press G to toggle either way).
+    if (!['localhost', '127.0.0.1'].includes(location.hostname)) {
+      document.body.classList.add('no-grid');
+    }
+    const readout = document.getElementById('readout');
+    function update() {
+      const w = window.innerWidth;
+      const col = (w - 40 - 80) / 9;
+      readout.textContent = `viewport ${w}px · column ${col.toFixed(1)}px · G toggles grid`;
+    }
+    window.addEventListener('resize', update);
+    document.addEventListener('keydown', e => {
+      if (e.key === 'g' || e.key === 'G') document.body.classList.toggle('no-grid');
+    });
+    update();
+
+    /* ---------- Photo grows to full screen on scroll ---------- */
+    (() => {
+      const grow = document.querySelector('.grow');
+      const photo = grow.querySelector('.grow-photo');
+      const fade = grow.querySelector('.grow-fade');
+      const title = grow.querySelector('.grow-title');
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+      const ease = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      const lerp = (a, b, t) => a + (b - a) * t;
+      let ticking = false;
+
+      function render() {
+        ticking = false;
+        const vw = document.documentElement.clientWidth;
+        const vh = window.innerHeight;
+        const col = (vw - 2 * 20 - 8 * 10) / 9;
+        // start: columns 4–6, 3:2, centred on the colour change
+        const w0 = 3 * col + 2 * 10, h0 = w0 * 2 / 3;
+        const x0 = 20 + 3 * (col + 10), y0 = vh / 2 - h0 / 2;
+
+        const r = grow.getBoundingClientRect();
+        const p = clamp(-r.top / (grow.offsetHeight - vh));        // 0 → 1 across the section
+        let g = clamp(p / 0.55);                                    // grow during the first 55%
+        g = reduce.matches ? (g > 0 ? 1 : 0) : ease(g);
+        const t = reduce.matches ? (p > 0.6 ? 1 : 0) : clamp((p - 0.6) / 0.15); // title fades in after it's full screen
+
+        photo.style.transform = 'none';
+        photo.style.left = lerp(x0, 0, g) + 'px';
+        photo.style.top = lerp(y0, 0, g) + 'px';
+        photo.style.width = lerp(w0, vw, g) + 'px';
+        photo.style.height = lerp(h0, vh, g) + 'px';
+        fade.style.opacity = t;
+        title.style.opacity = t;
+        title.style.transform = `translate(-50%, calc(-50% + ${(1 - t) * 24}px))`;
+      }
+      const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(render); } };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      render();
+    })();
+  </script>
+</body>
+</html>
