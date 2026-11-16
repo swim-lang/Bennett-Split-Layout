@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bennett</title>
+<script>
+  // Enable entrance motion (skipped for visitors who prefer reduced motion)
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('motion');
+  }
+</script>
 <style>
   @font-face {
     font-family: "Malamocco";
@@ -550,7 +556,7 @@
     align-items: flex-start; /* number, question and answer aligned by top */
     gap: var(--gutter);
     padding-top: var(--gutter);
-    border-top: 1px solid color-mix(in srgb, var(--color-blue) 35%, transparent);
+    border-top: 1px solid color-mix(in srgb, var(--color-black) 35%, transparent);
   }
   .question-number {                 /* column 1 */
     width: var(--col);
@@ -741,6 +747,33 @@
   .footer-legal .copyright { width: calc(4 * var(--col) + 3 * var(--gutter)); flex-shrink: 0; }  /* columns 1–4 */
   .footer-legal .disclaimer { width: calc(5 * var(--col) + 4 * var(--gutter)); flex-shrink: 0; } /* columns 5–9 */
 
+
+  /* ---------- Entrance motion ---------- */
+  :root { --slide-ease: cubic-bezier(0.22, 0.75, 0.2, 1); --slide-time: 0.9s; }
+
+  /* Hero (on load): headline slides in from the page's left edge,
+     subheader slides in from the left edge of the blue half */
+  .hero-center { clip-path: inset(-100vh -100vw -100vh -20px); } /* clip at the blue half's left edge */
+  .motion .headline,
+  .motion .subhead {
+    transition: transform var(--slide-time) var(--slide-ease), opacity var(--slide-time) var(--slide-ease);
+  }
+  .motion .headline { transform: translateX(calc(-100% - 40px)); }
+  .motion .subhead { transform: translateX(calc(-100% - 20px)); transition-delay: 0.15s; }
+  .motion.hero-in .headline,
+  .motion.hero-in .subhead { transform: none; }
+
+  /* Montana section (when in view): line 1 from the left, then line 2 from the right */
+  .advantage { overflow-x: clip; }
+  .motion .advantage-heading .line-left,
+  .motion .advantage-heading .line-right {
+    transition: transform var(--slide-time) var(--slide-ease);
+  }
+  .motion .advantage-heading .line-left { transform: translateX(calc(-100% - 40px)); }
+  .motion .advantage-heading .line-right { transform: translateX(calc(100% + 40px)); transition-delay: 0.6s; }
+  .motion .advantage-heading.is-in .line-left,
+  .motion .advantage-heading.is-in .line-right { transform: none; }
+
   /* live size readout */
   .readout {
     position: fixed;
@@ -904,7 +937,7 @@
           <li>Boats &amp; ATVs</li>
           <li>Aircraft</li>
         </ul>
-        <a class="btn-2col" href="#contact"><span>Discuss your vehicle</span></a>
+        <a class="btn-2col" href="#contact"><span>Discuss Your Vehicle</span></a>
       </div>
       <div class="vehicle-frame" aria-hidden="true">
         <div class="slide is-active"></div>
@@ -943,7 +976,7 @@
         <p>Yes. Our services include registration renewals, ongoing LLC support, and assistance when your ownership arrangements change.</p>
       </div>
     </div>
-    <a class="btn-2col questions-link" href="#questions"><span>View all questions</span></a>
+    <a class="btn-2col questions-link" href="#questions"><span>View All Questions</span></a>
   </section>
 
   <section class="contact-cta" id="contact">
@@ -968,7 +1001,7 @@
     </div>
     <div class="footer-columns">
       <div class="footer-brand">
-        <p class="footer-tagline">Montana vehicle registration and personal legal counsel.</p>
+        <p class="footer-tagline">Montana vehicle registration<br>and personal legal counsel.</p>
       </div>
       <ul class="footer-links">
         <li><a href="#montana-registration">Montana Registration</a></li>
@@ -1102,6 +1135,23 @@
       window.addEventListener('resize', measure);
       document.fonts.ready.then(measure);
       measure();
+    })();
+
+    /* ---------- Entrance motion triggers ---------- */
+    (() => {
+      const root = document.documentElement;
+      if (!root.classList.contains('motion')) return;
+      // Hero: once fonts are ready (so the text slides in at its final size)
+      const go = () => root.classList.add('hero-in');
+      const startHero = () => { requestAnimationFrame(() => requestAnimationFrame(go)); setTimeout(go, 120); }; // timer fallback if frames are paused
+      (document.fonts ? document.fonts.ready : Promise.resolve()).then(startHero);
+      setTimeout(startHero, 1200); // fallback if fonts are slow
+      // Montana heading: when it scrolls into view (plays once)
+      const heading = document.querySelector('.advantage-heading');
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { heading.classList.add('is-in'); io.disconnect(); } });
+      }, { threshold: 0.4 });
+      io.observe(heading);
     })();
   </script>
 </body>
