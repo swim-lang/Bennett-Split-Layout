@@ -296,7 +296,13 @@
     color: var(--color-black);
     white-space: nowrap;
   }
-  .cta:hover span { background: #fff; }
+  /* hover for every button: blue panel, off-white type */
+  .cta span, .btn-2col span { transition: background-color 0.2s ease, color 0.2s ease; }
+  .cta:hover span, .cta:focus-visible span,
+  .btn-2col:hover span, .btn-2col:focus-visible span {
+    background: var(--color-blue);
+    color: var(--color-off-white);
+  }
 
   /* larger button, same wordmark silhouette, two columns wide */
   .btn-2col {
@@ -321,7 +327,6 @@
     color: var(--color-black);
     white-space: nowrap;
   }
-  .btn-2col:hover span { background: #fff; }
   .advantage-body-col .btn-2col { margin-top: 20px; }
   /* vehicle list + its button, stacked in columns 1–6 */
   .vehicle-col {
@@ -364,8 +369,6 @@
     display: flex;
     flex-direction: column;
     gap: 40px;
-    padding-top: var(--gutter);
-    border-top: 1px solid color-mix(in srgb, var(--color-off-white) 35%, transparent);
     color: var(--color-off-white);
   }
   .situation-number {
@@ -649,8 +652,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 40px;
-    padding: 120px var(--margin) var(--margin);
+    gap: var(--margin);                /* 20px between columns, wordmark and legal row */
+    padding: var(--margin);            /* 20px all round */
     background: var(--color-blue);
     color: var(--color-off-white);
     font-family: var(--font-body);
@@ -666,7 +669,7 @@
     display: flex;
     align-items: flex-start;
     gap: var(--gutter);
-    padding-bottom: 80px;
+    padding-bottom: 100px;             /* 120px above the wordmark */
   }
   .footer-brand {                    /* columns 1–3 */
     width: calc(3 * var(--col) + 2 * var(--gutter));
@@ -675,41 +678,55 @@
     flex-direction: column;
     gap: 20px;
   }
-  .footer-brand .footer-name {
-    font-family: var(--font-title);
-    font-weight: 300;
-    font-size: 30px;
-    text-transform: uppercase;
-  }
-  .footer-brand .footer-est {
-    font-size: 12px;
-    text-transform: uppercase;
-  }
-  .footer-group {                    /* two columns each: 4–5, 6–7, 8–9 */
-    width: calc(2 * var(--col) + var(--gutter));
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  .footer-group h3 {
+  .footer-tagline {
     font-family: var(--font-title);
     font-weight: 300;
     font-size: 16px;
     text-transform: uppercase;
   }
-  .footer-group ul {
+  .footer-mark {                     /* pegasus + Est. "floating" in the middle of the space above the wordmark */
+    position: absolute;
+    top: 50%;                        /* the columns row has 20px above and below it, so its middle is the middle of that space */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+  }
+  .footer-pegasus {
+    display: block;
+    width: calc((2 * var(--col) + var(--gutter)) * 0.375);
+    height: auto;
+  }
+  .footer-est {
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+  .footer-links {                    /* column 8, same links as the nav */
+    width: var(--col);
+    margin-left: calc(4 * var(--col) + 4 * var(--gutter)); /* skip columns 4–7 */
+    flex-shrink: 0;
     list-style: none;
     display: flex;
     flex-direction: column;
     gap: 8px;
   }
-  .footer-group address {
+  .footer-contact {                  /* column 9 */
+    width: var(--col);
+    flex-shrink: 0;
     font-style: normal;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding-top: 20px;
+  }
+  .footer-wordmark {                 /* full width inside the margins */
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: auto;
   }
   .footer-legal {
     position: relative;
@@ -717,20 +734,10 @@
     display: flex;
     align-items: flex-start;
     gap: var(--gutter);
-    padding-top: var(--gutter);
-    border-top: 1px solid color-mix(in srgb, var(--color-off-white) 35%, transparent);
     font-size: 12px;
   }
-  .footer-legal .copyright { width: calc(3 * var(--col) + 2 * var(--gutter)); flex-shrink: 0; }
-  .footer-legal .legal-links { width: calc(2 * var(--col) + var(--gutter)); flex-shrink: 0; }
-  .footer-legal .disclaimer { width: calc(4 * var(--col) + 3 * var(--gutter)); flex-shrink: 0; }
-  .footer-wordmark {                 /* full width of the page, inside the margins */
-    position: relative;
-    z-index: 1;
-    display: block;
-    width: 100%;
-    height: auto;
-  }
+  .footer-legal .copyright { width: calc(4 * var(--col) + 3 * var(--gutter)); flex-shrink: 0; }  /* columns 1–4 */
+  .footer-legal .disclaimer { width: calc(5 * var(--col) + 4 * var(--gutter)); flex-shrink: 0; } /* columns 5–9 */
 
   /* live size readout */
   .readout {
@@ -959,44 +966,22 @@
     </div>
     <div class="footer-columns">
       <div class="footer-brand">
-        <span class="footer-name">Bennett Law</span>
-        <p>For those who know.<br>Montana vehicle registration and personal legal counsel.</p>
+        <p class="footer-tagline">Montana vehicle registration and personal legal counsel.</p>
+      </div>
+      <ul class="footer-links">
+        <li><a href="#montana-registration">Montana Registration</a></li>
+        <li><a href="#our-firm">Our Firm</a></li>
+        <li><a href="#questions">Questions</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <address class="footer-contact">
+        <a href="tel:+14065435803">(406) 543-5803</a>
+        <span>124 W Pine Street<br>Missoula, MT 59802</span>
+      </address>
+      <div class="footer-mark">
+        <svg class="footer-pegasus" role="img" aria-label="Bennett" viewBox="0 0 3000 1538" xmlns="http://www.w3.org/2000/svg" fill="var(--color-off-white)"><polygon points="2861.498 652.333 2847.17 617.27 2809.252 599.616 2745.873 560.048 2718.588 527.817 2671.012 467.05 2655.681 489.016 2661.757 544.662 2224.681 571.03 2099.957 625.468 1922.424 264.722 871.705 .292 918.131 84.145 1818.769 312.181 1808.78 334.184 933.907 112.639 986.207 214.523 1779.384 414.242 1995.718 676.636 1985.719 682.368 1982.671 684.03 1762.156 435.177 795.091 191.672 841.869 275.877 1732.739 501.449 1722.749 523.43 857.711 304.415 905.369 390.203 1692.694 589.57 1682.704 611.551 921.211 418.741 968.869 504.552 1652.648 677.669 1642.659 699.65 984.711 533.067 986.031 535.444 1124.582 641.255 1612.868 765.394 1702.478 836.796 1700.549 837.847 1617.195 850.088 1309.064 824.229 1139.772 878.6 721.19 819.971 442.684 834.118 0 1046.858 447.448 963.597 742.935 944.499 1019.494 931.442 837.023 1114.291 775.873 1149.005 634.497 1187.051 479.445 1328.92 358.35 1401.979 331.189 1433.554 239.099 1434.629 152.212 1537.708 303.249 1515.427 345.649 1488.845 395.424 1477.03 682.403 1290.778 1077.358 1226.02 1373.227 1076.97 1775.9 1148.207 2020.424 1059.462 2084.795 1077.105 2392.221 1028.931 2487.593 1027.317 2495.26 1054.381 2405.633 1154.157 2358.323 1208.645 2294.725 1208.398 2220.426 1297.084 2252.481 1296.639 2337.759 1288.949 2375.965 1264.192 2411.462 1239.143 2447.059 1217.128 2602.658 1032.67 2605.868 977.367 2499.313 942.888 2262.596 920.553 2421.301 755.932 2645.76 701.941 2697.605 753.016 2836.898 786.232 2932.808 843.576 3000 796.012 2861.498 652.333"/> <polygon points="464.165 1313.168 495.575 1284.974 415.042 1261.676 322.969 1348.397 419.215 1346.34 464.165 1313.168"/> <polygon points="2416.547 1041.29 2310.551 1055.007 2224.548 1130.752 2117.882 1192.687 2056.6 1179.138 1966.485 1264.193 2099.301 1264.193 2142.078 1239.323 2182.618 1232.306 2393.063 1081.783 2416.547 1041.29"/></svg>
         <span class="footer-est">Est. 1997 · Missoula, Montana</span>
       </div>
-      <nav class="footer-group" aria-label="Montana Registration">
-        <h3>Montana Registration</h3>
-        <ul>
-          <li><a href="#montana-registration">How It Works</a></li>
-          <li><a href="#montana-registration">LLC Formation &amp; Title Services</a></li>
-          <li><a href="#vehicles">Vehicles We Help With</a></li>
-          <li><a href="#montana-registration">Renewals &amp; Ongoing Support</a></li>
-        </ul>
-      </nav>
-      <nav class="footer-group" aria-label="The Firm">
-        <h3>The Firm</h3>
-        <ul>
-          <li><a href="#our-firm">Our Story</a></li>
-          <li><a href="#our-firm">Our Attorneys</a></li>
-          <li><a href="#our-firm">Other Legal Services</a></li>
-          <li><a href="#questions">Frequently Asked Questions</a></li>
-        </ul>
-      </nav>
-      <div class="footer-group">
-        <h3>Contact</h3>
-        <ul>
-          <li><a href="#contact">Speak with Bennett</a></li>
-          <li><a href="#contact">Existing Client Assistance</a></li>
-        </ul>
-        <address>
-          <a href="tel:+14065435803">(406) 543-5803</a>
-          <span>124 W Pine Street<br>Missoula, MT 59802</span>
-        </address>
-      </div>
-    </div>
-    <div class="footer-legal">
-      <span class="copyright">© <span id="year">2026</span> Bennett Law Office P.C.</span>
-      <span class="legal-links"><a href="#privacy">Privacy</a> · <a href="#legal-disclaimer">Legal Disclaimer</a></span>
-      <p class="disclaimer">Information on this website is general and does not constitute legal advice. Contacting the firm does not establish an attorney-client relationship. The suitability of any ownership or registration arrangement depends on individual circumstances and applicable law.</p>
     </div>
     <svg class="footer-wordmark" viewBox="0 0 3000 442" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bennett">
         <path fill="var(--color-off-white)" d="M2978.013,140.967v160.066c0,65.565-53.121,118.73-118.73,118.73H140.717c-65.565,0-118.73-53.165-118.73-118.73v-160.066c0-65.61,53.165-118.73,118.73-118.73h2718.566C2924.892,22.237,2978.013,75.357,2978.013,140.967Z"/>
@@ -1011,6 +996,10 @@
           <path d="M153.897,110.168h102.592c32.613,0,58.261,17.063,58.261,49.361v5.066c0,15.832-5.383,25.034-18.682,35.483,21.532,10.765,31.348,28.937,31.348,48.885v20.511c0,32.297-25.648,62.342-58.262,62.342h-115.257V110.168ZM283.086,164.384v-5.066c0-11.96-12.666-22.236-30.713-22.236h-66.812v49.538h66.812C270.42,186.62,283.086,176.345,283.086,164.384ZM295.752,269.474v-20.511c0-18.365-12.666-35.428-30.714-35.428h-79.477v91.367h79.477C283.086,304.902,295.752,287.839,295.752,269.474Z"/>
         </g>
       </svg>
+    <div class="footer-legal">
+      <span class="copyright">© <span id="year">2026</span> Bennett Law Office P.C.</span>
+      <p class="disclaimer">Information on this website is general and does not constitute legal advice. Contacting the firm does not establish an attorney-client relationship. The suitability of any ownership or registration arrangement depends on individual circumstances and applicable law.</p>
+    </div>
   </footer>
 
   <div class="readout" id="readout"></div>
