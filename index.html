@@ -481,6 +481,74 @@
     color: var(--color-black);
   }
 
+
+  /* ---------- Section: Questions (blue) ---------- */
+  .questions {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    padding: 120px var(--margin);
+    background: var(--color-blue);
+    color: var(--color-off-white);
+  }
+  .questions .grid-guides { top: 0; bottom: 0; }
+  .questions-heading {
+    position: relative;
+    z-index: 1;
+    font-family: var(--font-title);
+    font-weight: 300;
+    font-size: 72px;
+    text-transform: uppercase;
+  }
+  .question-list {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+  }
+  .question {
+    display: flex;
+    align-items: flex-start; /* number, question and answer aligned by top */
+    gap: var(--gutter);
+    padding-top: var(--gutter);
+    border-top: 1px solid color-mix(in srgb, var(--color-off-white) 35%, transparent);
+  }
+  .question-number {                 /* column 1 */
+    width: var(--col);
+    flex-shrink: 0;
+    font-family: var(--font-body);
+    font-weight: 350;
+    font-size: 16px;
+  }
+  .question h3 {                     /* columns 2–5 */
+    width: calc(4 * var(--col) + 3 * var(--gutter));
+    flex-shrink: 0;
+    font-family: var(--font-title);
+    font-weight: 300;
+    font-size: 30px;
+    text-transform: uppercase;
+  }
+  .question p {                      /* columns 6–8 */
+    width: calc(3 * var(--col) + 2 * var(--gutter));
+    flex-shrink: 0;
+    font-family: var(--font-body);
+    font-weight: 350;
+    font-size: 16px;
+  }
+  .questions-link {                  /* starts at column 6 */
+    position: relative;
+    z-index: 1;
+    margin-left: calc(5 * (var(--col) + var(--gutter)));
+    align-self: flex-start;
+    font-family: var(--font-body);
+    font-weight: 350;
+    font-size: 16px;
+    color: var(--color-off-white);
+    text-decoration: underline;
+  }
+
   /* live size readout */
   .readout {
     position: fixed;
@@ -631,6 +699,36 @@
         <div class="slide"></div>
       </div>
     </div>
+  </section>
+
+  <section class="questions" id="questions">
+    <div class="grid-guides" aria-hidden="true">
+      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+    <h2 class="questions-heading">A few things worth knowing.</h2>
+    <div class="question-list">
+      <div class="question">
+        <span class="question-number">01</span>
+        <h3>Do I need to live in Montana?</h3>
+        <p>Not necessarily. A Montana entity may own and register a vehicle, but your circumstances and the requirements where the vehicle is kept and used must be considered. We can help you evaluate whether the arrangement is appropriate.</p>
+      </div>
+      <div class="question">
+        <span class="question-number">02</span>
+        <h3>Can you help before I buy?</h3>
+        <p>Yes. An early conversation allows us to consider the ownership structure and documentation before your purchase is complete.</p>
+      </div>
+      <div class="question">
+        <span class="question-number">03</span>
+        <h3>What if the vehicle is financed?</h3>
+        <p>Lender requirements matter. Ownership through an LLC may require written consent and additional documentation, which should be addressed before proceeding.</p>
+      </div>
+      <div class="question">
+        <span class="question-number">04</span>
+        <h3>Can you help after registration is complete?</h3>
+        <p>Yes. Our services include registration renewals, ongoing LLC support, and assistance when your ownership arrangements change.</p>
+      </div>
+    </div>
+    <a class="questions-link" href="#questions">View all questions</a>
   </section>
 
   <div class="readout" id="readout"></div>
