@@ -757,6 +757,13 @@
   .motion .subhead { transform: translateX(calc(-100% - 20px)); transition-delay: 0.2s; }
   .motion.hero-in .headline,
   .motion.hero-in .subhead { transform: none; }
+  /* Hero pegasus (on load): fades in and rises into place, like the question rows */
+  .motion .hero-logo {
+    opacity: 0;
+    transform: translateY(calc(-50% + 40px));
+    transition: opacity 1.2s ease, transform 1.6s var(--slide-ease);
+  }
+  .motion.hero-in .hero-logo { opacity: 1; transform: translateY(-50%); }
 
   /* Montana section (when in view): line 1 from the left, then line 2 from the right */
   .advantage { overflow-x: clip; }
