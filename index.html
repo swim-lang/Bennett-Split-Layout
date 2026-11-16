@@ -210,8 +210,8 @@
     align-items: flex-start;
     gap: calc(var(--col) + 2 * var(--gutter)); /* skips column 4 */
   }
-  .advantage-image {
-    width: calc(4 * var(--col) + 3 * var(--gutter));
+  .advantage-image {                 /* columns 5–9, ending at the 20px right margin */
+    width: calc(5 * var(--col) + 4 * var(--gutter));
     aspect-ratio: 616.67 / 411;
     flex-shrink: 0;
     background: #cccccc;
@@ -650,6 +650,7 @@
   /* ---------- Footer (blue) ---------- */
   .site-footer {
     position: relative;
+    min-height: 100vh;                 /* fills the screen; columns stretch, wordmark + legal sit at the bottom */
     display: flex;
     flex-direction: column;
     gap: var(--margin);                /* 20px between columns, wordmark and legal row */
@@ -666,6 +667,7 @@
   .footer-columns {
     position: relative;
     z-index: 1;
+    flex: 1;
     display: flex;
     align-items: flex-start;
     gap: var(--gutter);
@@ -820,7 +822,7 @@
     <div class="advantage-body-col">
       <p>Montana’s lack of a general sales tax makes it a compelling place to explore vehicle ownership. Whether a Montana LLC is appropriate for you deserves a closer look.</p>
       <p>We consider your circumstances, explain the relevant requirements, and help you understand the next steps. When the arrangement is right, we attend to the entity formation, title work, and registration.</p>
-      <a class="btn-2col" href="#montana-registration"><span>Understand the Montana approach</span></a>
+      <a class="btn-2col" href="#montana-registration"><span>Understand the Montana Approach</span></a>
     </div>
     <div class="advantage-image">
       <img src="assets/advantage-photo.jpg" alt="Aerial view of a mountain valley with a road through green meadows">
