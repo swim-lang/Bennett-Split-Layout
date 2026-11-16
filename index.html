@@ -105,6 +105,12 @@
     height: 100%;
     object-fit: cover;
   }
+  .hero-photo::after {               /* subtle darkening so the logo, type and wordmark read clearly */
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(22, 22, 22, 0.25);
+  }
   /* label + subheader grouped: right half, left-aligned with the paragraph,
      vertically centered on the page */
   .hero-center {
@@ -365,7 +371,7 @@
   .situation-number {
     font-family: var(--font-title);
     font-weight: 300;
-    font-size: 200px;
+    font-size: 120px;
   }
   .situation-photo {                 /* 3 columns, 3:2 — placeholder greys until photos arrive */
     width: calc(3 * var(--col) + 2 * var(--gutter));
@@ -393,29 +399,6 @@
     font-family: var(--font-body);
     font-weight: 350;
     font-size: 16px;
-  }
-  .situations-progress {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    color: var(--color-off-white);
-    font-family: var(--font-body);
-    font-weight: 350;
-    font-size: 16px;
-  }
-  .situations-progress .bar {
-    position: relative;
-    flex: 1;
-    height: 1px;
-    background: color-mix(in srgb, var(--color-off-white) 35%, transparent);
-  }
-  .situations-progress .fill {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 1px;
-    width: 16.67%;
-    background: var(--color-off-white);
   }
   .situations .grid-guides { top: 0; bottom: 0; }
 
@@ -599,6 +582,23 @@
     text-decoration: underline;
   }
 
+
+  /* ---------- Bennett pegasus mark (Off-White over photos) ---------- */
+  .logo-svg { display: block; width: 100%; height: auto; }
+  .hero-logo {                       /* centered on the photo half */
+    position: absolute;
+    z-index: 1;
+    width: calc((3 * var(--col) + 2 * var(--gutter)) * 0.375); /* 37.5% of 3 columns */
+    left: calc(25vw - (3 * var(--col) + 2 * var(--gutter)) * 0.1875);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .grow-logo {                       /* between the two title lines in the full-screen photo */
+    display: block;
+    width: calc((2 * var(--col) + var(--gutter)) * 0.375); /* 37.5% of 2 columns */
+    margin: var(--gutter) auto; /* 10px gap to each title line, as in Paper */
+  }
+
   /* live size readout */
   .readout {
     position: fixed;
@@ -622,6 +622,8 @@
   <div class="hero-photo">
     <img src="assets/hero-photo.jpg" alt="Classic cars inside a restoration garage">
   </div>
+
+  <div class="hero-logo"><svg class="logo-svg" role="img" aria-label="Bennett" viewBox="0 0 3000 1538" xmlns="http://www.w3.org/2000/svg" fill="var(--color-off-white)"><polygon points="2861.498 652.333 2847.17 617.27 2809.252 599.616 2745.873 560.048 2718.588 527.817 2671.012 467.05 2655.681 489.016 2661.757 544.662 2224.681 571.03 2099.957 625.468 1922.424 264.722 871.705 .292 918.131 84.145 1818.769 312.181 1808.78 334.184 933.907 112.639 986.207 214.523 1779.384 414.242 1995.718 676.636 1985.719 682.368 1982.671 684.03 1762.156 435.177 795.091 191.672 841.869 275.877 1732.739 501.449 1722.749 523.43 857.711 304.415 905.369 390.203 1692.694 589.57 1682.704 611.551 921.211 418.741 968.869 504.552 1652.648 677.669 1642.659 699.65 984.711 533.067 986.031 535.444 1124.582 641.255 1612.868 765.394 1702.478 836.796 1700.549 837.847 1617.195 850.088 1309.064 824.229 1139.772 878.6 721.19 819.971 442.684 834.118 0 1046.858 447.448 963.597 742.935 944.499 1019.494 931.442 837.023 1114.291 775.873 1149.005 634.497 1187.051 479.445 1328.92 358.35 1401.979 331.189 1433.554 239.099 1434.629 152.212 1537.708 303.249 1515.427 345.649 1488.845 395.424 1477.03 682.403 1290.778 1077.358 1226.02 1373.227 1076.97 1775.9 1148.207 2020.424 1059.462 2084.795 1077.105 2392.221 1028.931 2487.593 1027.317 2495.26 1054.381 2405.633 1154.157 2358.323 1208.645 2294.725 1208.398 2220.426 1297.084 2252.481 1296.639 2337.759 1288.949 2375.965 1264.192 2411.462 1239.143 2447.059 1217.128 2602.658 1032.67 2605.868 977.367 2499.313 942.888 2262.596 920.553 2421.301 755.932 2645.76 701.941 2697.605 753.016 2836.898 786.232 2932.808 843.576 3000 796.012 2861.498 652.333"/> <polygon points="464.165 1313.168 495.575 1284.974 415.042 1261.676 322.969 1348.397 419.215 1346.34 464.165 1313.168"/> <polygon points="2416.547 1041.29 2310.551 1055.007 2224.548 1130.752 2117.882 1192.687 2056.6 1179.138 1966.485 1264.193 2099.301 1264.193 2142.078 1239.323 2182.618 1232.306 2393.063 1081.783 2416.547 1041.29"/></svg></div>
 
   <nav class="nav">
     <a href="/" aria-label="Bennett home">
@@ -739,15 +741,11 @@
         </article>
         <div class="situation-photo-slot" aria-hidden="true"></div>
       </div>
-      <div class="situations-progress" aria-hidden="true">
-        <span class="count">01 / 06</span>
-        <div class="bar"><div class="fill"></div></div>
-      </div>
       <div class="grow-photo">
         <img src="assets/hero-photo.jpg" alt="Classic cars inside a restoration garage">
         <div class="grow-fade"></div>
       </div>
-      <h2 class="grow-title" id="grow-title"><span class="line-body">The vehicle may change;</span> <span class="line-title">the care given remains personal.</span></h2>
+      <h2 class="grow-title" id="grow-title"><span class="line-body">The vehicle may change;</span><span class="grow-logo"><svg class="logo-svg" aria-hidden="true" viewBox="0 0 3000 1538" xmlns="http://www.w3.org/2000/svg" fill="var(--color-off-white)"><polygon points="2861.498 652.333 2847.17 617.27 2809.252 599.616 2745.873 560.048 2718.588 527.817 2671.012 467.05 2655.681 489.016 2661.757 544.662 2224.681 571.03 2099.957 625.468 1922.424 264.722 871.705 .292 918.131 84.145 1818.769 312.181 1808.78 334.184 933.907 112.639 986.207 214.523 1779.384 414.242 1995.718 676.636 1985.719 682.368 1982.671 684.03 1762.156 435.177 795.091 191.672 841.869 275.877 1732.739 501.449 1722.749 523.43 857.711 304.415 905.369 390.203 1692.694 589.57 1682.704 611.551 921.211 418.741 968.869 504.552 1652.648 677.669 1642.659 699.65 984.711 533.067 986.031 535.444 1124.582 641.255 1612.868 765.394 1702.478 836.796 1700.549 837.847 1617.195 850.088 1309.064 824.229 1139.772 878.6 721.19 819.971 442.684 834.118 0 1046.858 447.448 963.597 742.935 944.499 1019.494 931.442 837.023 1114.291 775.873 1149.005 634.497 1187.051 479.445 1328.92 358.35 1401.979 331.189 1433.554 239.099 1434.629 152.212 1537.708 303.249 1515.427 345.649 1488.845 395.424 1477.03 682.403 1290.778 1077.358 1226.02 1373.227 1076.97 1775.9 1148.207 2020.424 1059.462 2084.795 1077.105 2392.221 1028.931 2487.593 1027.317 2495.26 1054.381 2405.633 1154.157 2358.323 1208.645 2294.725 1208.398 2220.426 1297.084 2252.481 1296.639 2337.759 1288.949 2375.965 1264.192 2411.462 1239.143 2447.059 1217.128 2602.658 1032.67 2605.868 977.367 2499.313 942.888 2262.596 920.553 2421.301 755.932 2645.76 701.941 2697.605 753.016 2836.898 786.232 2932.808 843.576 3000 796.012 2861.498 652.333"/> <polygon points="464.165 1313.168 495.575 1284.974 415.042 1261.676 322.969 1348.397 419.215 1346.34 464.165 1313.168"/> <polygon points="2416.547 1041.29 2310.551 1055.007 2224.548 1130.752 2117.882 1192.687 2056.6 1179.138 1966.485 1264.193 2099.301 1264.193 2142.078 1239.323 2182.618 1232.306 2393.063 1081.783 2416.547 1041.29"/></svg></span> <span class="line-title">the care given remains personal.</span></h2>
     </div>
   </section>
 
@@ -856,12 +854,9 @@
       const stage = section.querySelector('.situations-stage');
       const track = section.querySelector('.situations-track');
       const slot = section.querySelector('.situation-photo-slot');
-      const fill = section.querySelector('.situations-progress .fill');
-      const count = section.querySelector('.situations-progress .count');
       const photo = section.querySelector('.grow-photo');
       const fade = section.querySelector('.grow-fade');
       const title = section.querySelector('.grow-title');
-      const panels = section.querySelectorAll('.situation-panel').length;
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
       const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
       const ease = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
@@ -884,9 +879,6 @@
         // phase 1: slide
         const p = distance ? Math.min(scrolled, distance) / distance : 1;
         track.style.transform = `translateX(${-p * distance}px)`;
-        fill.style.width = (100 / panels + p * (100 - 100 / panels)) + '%';
-        const n = Math.min(panels, 1 + Math.round(p * (panels - 1)));
-        count.textContent = String(n).padStart(2, '0') + ' / ' + String(panels).padStart(2, '0');
 
         // phase 2: grow from the slot to the full screen
         const after = Math.max(0, scrolled - distance);
