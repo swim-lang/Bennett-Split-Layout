@@ -515,15 +515,15 @@
   }
 
 
-  /* ---------- Section: Questions (blue) ---------- */
+  /* ---------- Section: Questions (off-white) ---------- */
   .questions {
     position: relative;
     display: flex;
     flex-direction: column;
     gap: 80px;
     padding: 120px var(--margin);
-    background: var(--color-blue);
-    color: var(--color-off-white);
+    background: var(--color-off-white);
+    color: var(--color-black);
   }
   .questions .grid-guides { top: 0; bottom: 0; }
   .questions-heading {
@@ -533,6 +533,7 @@
     font-weight: 300;
     font-size: 72px;
     text-transform: uppercase;
+    color: var(--color-blue);
   }
   .question-list {
     position: relative;
@@ -546,7 +547,7 @@
     align-items: flex-start; /* number, question and answer aligned by top */
     gap: var(--gutter);
     padding-top: var(--gutter);
-    border-top: 1px solid color-mix(in srgb, var(--color-off-white) 35%, transparent);
+    border-top: 1px solid color-mix(in srgb, var(--color-blue) 35%, transparent);
   }
   .question-number {                 /* column 1 */
     width: var(--col);
@@ -570,17 +571,60 @@
     font-weight: 350;
     font-size: 16px;
   }
-  .questions-link {                  /* starts at column 6 */
+  .questions-link {                  /* site button, starts at column 6 */
     position: relative;
     z-index: 1;
     margin-left: calc(5 * (var(--col) + var(--gutter)));
     align-self: flex-start;
+  }
+
+  /* ---------- Section: Contact CTA (off-white) ---------- */
+  .contact-cta {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: calc(var(--col) + 2 * var(--gutter)); /* skips column 5 */
+    padding: 120px var(--margin);
+    background: var(--color-off-white);
+    color: var(--color-black);
+  }
+  .contact-cta .grid-guides { top: 0; bottom: 0; }
+  .contact-photo {                   /* columns 1–4, 3:2 placeholder until a photo arrives */
+    position: relative;
+    z-index: 1;
+    width: calc(4 * var(--col) + 3 * var(--gutter));
+    aspect-ratio: 616.67 / 411;
+    flex-shrink: 0;
+    background: #cccccc;
+  }
+  .contact-cta h2 {                  /* sits above the text, columns 6–8 */
+    font-family: var(--font-title);
+    font-weight: 300;
+    font-size: 72px;
+    text-transform: uppercase;
+    color: var(--color-blue);
+  }
+  .contact-cta-body {                /* columns 6–8 */
+    position: relative;
+    z-index: 1;
+    width: calc(3 * var(--col) + 2 * var(--gutter));
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
     font-family: var(--font-body);
     font-weight: 350;
     font-size: 16px;
-    color: var(--color-off-white);
-    text-decoration: underline;
   }
+  .contact-cta address {
+    font-style: normal;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 40px;
+  }
+  .contact-cta address a { color: inherit; text-decoration: none; }
 
 
   /* ---------- Bennett pegasus mark (Off-White over photos) ---------- */
@@ -597,6 +641,95 @@
     display: block;
     width: calc((2 * var(--col) + var(--gutter)) * 0.375); /* 37.5% of 2 columns */
     margin: var(--gutter) auto; /* 10px gap to each title line, as in Paper */
+  }
+
+
+  /* ---------- Footer (blue) ---------- */
+  .site-footer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 120px var(--margin) var(--margin);
+    background: var(--color-blue);
+    color: var(--color-off-white);
+    font-family: var(--font-body);
+    font-weight: 350;
+    font-size: 16px;
+  }
+  .site-footer .grid-guides { top: 0; bottom: 0; }
+  .site-footer a { color: inherit; text-decoration: none; }
+  .site-footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .footer-columns {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gutter);
+    padding-bottom: 80px;
+  }
+  .footer-brand {                    /* columns 1–3 */
+    width: calc(3 * var(--col) + 2 * var(--gutter));
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .footer-brand .footer-name {
+    font-family: var(--font-title);
+    font-weight: 300;
+    font-size: 30px;
+    text-transform: uppercase;
+  }
+  .footer-brand .footer-est {
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+  .footer-group {                    /* two columns each: 4–5, 6–7, 8–9 */
+    width: calc(2 * var(--col) + var(--gutter));
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .footer-group h3 {
+    font-family: var(--font-title);
+    font-weight: 300;
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+  .footer-group ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .footer-group address {
+    font-style: normal;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 20px;
+  }
+  .footer-legal {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gutter);
+    padding-top: var(--gutter);
+    border-top: 1px solid color-mix(in srgb, var(--color-off-white) 35%, transparent);
+    font-size: 12px;
+  }
+  .footer-legal .copyright { width: calc(3 * var(--col) + 2 * var(--gutter)); flex-shrink: 0; }
+  .footer-legal .legal-links { width: calc(2 * var(--col) + var(--gutter)); flex-shrink: 0; }
+  .footer-legal .disclaimer { width: calc(4 * var(--col) + 3 * var(--gutter)); flex-shrink: 0; }
+  .footer-wordmark {                 /* full width of the page, inside the margins */
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   /* live size readout */
@@ -749,7 +882,7 @@
     </div>
   </section>
 
-  <section class="vehicles">
+  <section class="vehicles" id="vehicles">
     <div class="vehicles-stage">
       <div class="grid-guides grid-guides--blue" aria-hidden="true">
         <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
@@ -775,7 +908,7 @@
   </section>
 
   <section class="questions" id="questions">
-    <div class="grid-guides" aria-hidden="true">
+    <div class="grid-guides grid-guides--blue" aria-hidden="true">
       <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
     </div>
     <h2 class="questions-heading">A few things worth knowing.</h2>
@@ -801,8 +934,84 @@
         <p>Yes. Our services include registration renewals, ongoing LLC support, and assistance when your ownership arrangements change.</p>
       </div>
     </div>
-    <a class="questions-link" href="#questions">View all questions</a>
+    <a class="btn-2col questions-link" href="#questions"><span>View all questions</span></a>
   </section>
+
+  <section class="contact-cta" id="contact">
+    <div class="grid-guides grid-guides--blue" aria-hidden="true">
+      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+    <div class="contact-photo" aria-hidden="true"></div>
+    <div class="contact-cta-body">
+      <h2>In good company.</h2>
+      <p>The next step is a conversation. Tell us what you have in mind, and we will help you understand the way forward.</p>
+      <a class="btn-2col" href="tel:+14065435803"><span>Speak with Bennett</span></a>
+      <address>
+        <span>124 W Pine Street<br>Missoula, MT 59802</span>
+        <a href="tel:+14065435803">(406) 543-5803</a>
+      </address>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="grid-guides" aria-hidden="true">
+      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+    <div class="footer-columns">
+      <div class="footer-brand">
+        <span class="footer-name">Bennett Law</span>
+        <p>For those who know.<br>Montana vehicle registration and personal legal counsel.</p>
+        <span class="footer-est">Est. 1997 · Missoula, Montana</span>
+      </div>
+      <nav class="footer-group" aria-label="Montana Registration">
+        <h3>Montana Registration</h3>
+        <ul>
+          <li><a href="#montana-registration">How It Works</a></li>
+          <li><a href="#montana-registration">LLC Formation &amp; Title Services</a></li>
+          <li><a href="#vehicles">Vehicles We Help With</a></li>
+          <li><a href="#montana-registration">Renewals &amp; Ongoing Support</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-group" aria-label="The Firm">
+        <h3>The Firm</h3>
+        <ul>
+          <li><a href="#our-firm">Our Story</a></li>
+          <li><a href="#our-firm">Our Attorneys</a></li>
+          <li><a href="#our-firm">Other Legal Services</a></li>
+          <li><a href="#questions">Frequently Asked Questions</a></li>
+        </ul>
+      </nav>
+      <div class="footer-group">
+        <h3>Contact</h3>
+        <ul>
+          <li><a href="#contact">Speak with Bennett</a></li>
+          <li><a href="#contact">Existing Client Assistance</a></li>
+        </ul>
+        <address>
+          <a href="tel:+14065435803">(406) 543-5803</a>
+          <span>124 W Pine Street<br>Missoula, MT 59802</span>
+        </address>
+      </div>
+    </div>
+    <div class="footer-legal">
+      <span class="copyright">© <span id="year">2026</span> Bennett Law Office P.C.</span>
+      <span class="legal-links"><a href="#privacy">Privacy</a> · <a href="#legal-disclaimer">Legal Disclaimer</a></span>
+      <p class="disclaimer">Information on this website is general and does not constitute legal advice. Contacting the firm does not establish an attorney-client relationship. The suitability of any ownership or registration arrangement depends on individual circumstances and applicable law.</p>
+    </div>
+    <svg class="footer-wordmark" viewBox="0 0 3000 442" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bennett">
+        <path fill="var(--color-off-white)" d="M2978.013,140.967v160.066c0,65.565-53.121,118.73-118.73,118.73H140.717c-65.565,0-118.73-53.165-118.73-118.73v-160.066c0-65.61,53.165-118.73,118.73-118.73h2718.566C2924.892,22.237,2978.013,75.357,2978.013,140.967Z"/>
+        <path fill="var(--color-black)" d="M0,.25v441.5h3000V.25H0ZM2978.013,301.033c0,65.565-53.121,118.73-118.73,118.73H140.717c-65.565,0-118.73-53.165-118.73-118.73v-160.066c0-65.61,53.165-118.73,118.73-118.73h2718.566c65.609,0,118.73,53.12,118.73,118.73V301.033Z"/>
+        <g fill="var(--color-black)">
+          <path d="M559.461,110.168h164.021v26.914h-132.356v49.538h85.741v26.915h-85.741v91.367h132.356v26.914h-164.021V110.168Z"/>
+          <path d="M970.578,331.816V110.168h31.665l128.238,170.669V110.168h30.081v221.648h-31.664l-128.239-170.669v170.669H970.578Z"/>
+          <path d="M1409.559,331.816V110.168h31.664l128.239,170.669V110.168h30.081v221.648h-31.664l-128.239-170.669v170.669H1409.559Z"/>
+          <path d="M1856.9,110.168h164.019v26.914h-132.356v49.538h85.743v26.915h-85.743v91.367h132.356v26.914h-164.019V110.168Z"/>
+          <path d="M2311.91,137.082h-94.993v-26.914h221.648v26.914h-94.99v194.734h-31.665V137.082Z"/>
+          <path d="M2719.454,137.082h-94.993v-26.914h221.648v26.914h-94.99v194.734h-31.665V137.082Z"/>
+          <path d="M153.897,110.168h102.592c32.613,0,58.261,17.063,58.261,49.361v5.066c0,15.832-5.383,25.034-18.682,35.483,21.532,10.765,31.348,28.937,31.348,48.885v20.511c0,32.297-25.648,62.342-58.262,62.342h-115.257V110.168ZM283.086,164.384v-5.066c0-11.96-12.666-22.236-30.713-22.236h-66.812v49.538h66.812C270.42,186.62,283.086,176.345,283.086,164.384ZM295.752,269.474v-20.511c0-18.365-12.666-35.428-30.714-35.428h-79.477v91.367h79.477C283.086,304.902,295.752,287.839,295.752,269.474Z"/>
+        </g>
+      </svg>
+  </footer>
 
   <div class="readout" id="readout"></div>
 
@@ -812,6 +1021,7 @@
     if (!['localhost', '127.0.0.1'].includes(location.hostname)) {
       document.body.classList.add('no-grid');
     }
+    document.getElementById('year').textContent = new Date().getFullYear();
     const readout = document.getElementById('readout');
     function update() {
       const w = window.innerWidth;
