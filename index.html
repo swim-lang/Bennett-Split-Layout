@@ -317,6 +317,15 @@
   }
   .btn-2col:hover span { background: #fff; }
   .advantage-body-col .btn-2col { margin-top: 20px; }
+  /* vehicle list + its button, stacked in columns 1–6 */
+  .vehicle-col {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+  .vehicle-col .btn-2col { margin-top: 40px; }
 
 
   /* ---------- Section: Situations (blue) ---------- */
@@ -604,13 +613,16 @@
       <div class="grid-guides grid-guides--blue" aria-hidden="true">
         <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
       </div>
-      <ul class="vehicle-list">
-        <li class="is-active">Cars</li>
-        <li>Motorhomes &amp; RVs</li>
-        <li>Motorcycles</li>
-        <li>Boats &amp; ATVs</li>
-        <li>Aircraft</li>
-      </ul>
+      <div class="vehicle-col">
+        <ul class="vehicle-list">
+          <li class="is-active">Cars</li>
+          <li>Motorhomes &amp; RVs</li>
+          <li>Motorcycles</li>
+          <li>Boats &amp; ATVs</li>
+          <li>Aircraft</li>
+        </ul>
+        <a class="btn-2col" href="#contact"><span>Discuss your vehicle</span></a>
+      </div>
       <div class="vehicle-frame" aria-hidden="true">
         <div class="slide is-active"></div>
         <div class="slide"></div>
