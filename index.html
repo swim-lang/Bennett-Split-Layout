@@ -158,31 +158,6 @@
     width: calc(8 * var(--col) + 7 * var(--gutter) - 50vw);
   }
 
-  /* ---------- Grid guides (press G to toggle) ---------- */
-  .grid-guides {
-    position: absolute;
-    top: var(--margin);
-    bottom: var(--margin);
-    left: var(--margin);
-    right: var(--margin);
-    display: grid;
-    grid-template-columns: repeat(var(--cols), 1fr);
-    gap: var(--gutter);
-    pointer-events: none;
-    z-index: 0;
-  }
-  .grid-guides div {
-    background: color-mix(in srgb, var(--color-off-white) 8%, transparent);
-    border-left: 1px solid color-mix(in srgb, var(--color-off-white) 35%, transparent);
-    border-right: 1px solid color-mix(in srgb, var(--color-off-white) 35%, transparent);
-  }
-  .grid-guides--blue { top: 0; bottom: 0; }
-  .grid-guides--blue div {
-    background: color-mix(in srgb, var(--color-blue) 8%, transparent);
-    border-left-color: color-mix(in srgb, var(--color-blue) 35%, transparent);
-    border-right-color: color-mix(in srgb, var(--color-blue) 35%, transparent);
-  }
-  body.no-grid .grid-guides { display: none; }
 
   /* ---------- Section: Montana advantage (off-white) ---------- */
   .advantage {
@@ -409,7 +384,6 @@
     font-weight: 350;
     font-size: 16px;
   }
-  .situations .grid-guides { top: 0; bottom: 0; }
 
   /* ---------- Section: Vehicles (off-white) ---------- */
   .vehicles {
@@ -428,7 +402,6 @@
     padding: calc((100vh - (3 * var(--col) + 2 * var(--gutter)) * 575 / 460) / 2) var(--margin) 0;
     overflow: hidden;
   }
-  .vehicles .grid-guides { top: 0; bottom: 0; }
   .vehicle-list li {
     opacity: 0.25;
     transition: opacity 0.4s ease;
@@ -491,7 +464,15 @@
     inset: 0;
     background: rgba(22, 22, 22, 0.55); /* even dim so the centred title reads */
     opacity: 0;
+    transition: opacity 1.4s ease;
   }
+  /* Once triggered, the dim + title play all the way through on their own (not tied to scrolling) */
+  .grow-title { transition: opacity 1.4s ease 0.2s, transform 1.8s var(--slide-ease, ease) 0.2s; }
+  .situations:not(.title-in) .grow-fade,
+  .situations:not(.title-in) .grow-title { transition-duration: 0.25s; transition-delay: 0s; } /* scrolling back: clear quickly */
+  .situations.title-in .grow-fade { opacity: 1; }
+  .situations.title-in .grow-title { opacity: 1; transform: translate(-50%, -50%); }
+  @media (prefers-reduced-motion: reduce) { .grow-fade, .grow-title { transition: none; } }
   .grow-title {
     position: absolute;
     z-index: 3;
@@ -527,6 +508,7 @@
   /* ---------- Section: Questions (off-white) ---------- */
   .questions {
     position: relative;
+    z-index: 1;                        /* sits above the contact section's off-white fill */
     display: flex;
     flex-direction: column;
     gap: 80px;
@@ -534,7 +516,6 @@
     background: var(--color-off-white);
     color: var(--color-black);
   }
-  .questions .grid-guides { top: 0; bottom: 0; }
   .questions-heading {
     position: relative;
     z-index: 1;
@@ -589,15 +570,26 @@
 
   /* ---------- Section: Contact CTA (off-white) ---------- */
   .contact-cta {
-    position: relative;
+    position: sticky;                /* pins once its bottom reaches the bottom of the screen; the footer then slides over it */
+    top: var(--cta-top, 0px);        /* set by script: screen height minus section height */
+    z-index: 0;
     display: flex;
     align-items: flex-start;
     gap: calc(var(--col) + 2 * var(--gutter)); /* skips column 5 */
-    padding: 120px var(--margin);
+    padding: 120px var(--margin) 300px; /* extra at the bottom so the content sits nearer the middle once pinned */
     background: var(--color-off-white);
     color: var(--color-black);
   }
-  .contact-cta .grid-guides { top: 0; bottom: 0; }
+  .contact-cta::before {             /* off-white fill above the pinned section, so no gap shows once the questions scroll away */
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    height: 100vh;
+    background: var(--color-off-white);
+    pointer-events: none;
+  }
   .contact-photo {                   /* columns 1–4, 3:2 placeholder until a photo arrives */
     position: relative;
     z-index: 2;                      /* above the text so "In good company." can slide out from behind it */
@@ -627,13 +619,13 @@
     font-weight: 350;
     font-size: 16px;
   }
-  .contact-cta address {
+  .contact-cta address {            /* phone in column 6, address in column 7, 40px under the button */
     font-style: normal;
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding-top: 40px;
+    gap: var(--gutter);
   }
+  .contact-cta address a:first-child { width: var(--col); flex-shrink: 0; } /* phone in column 6, address in column 7 */
+  .contact-cta address a:hover { text-decoration: underline; text-underline-offset: 3px; } /* same as the nav links */
   .contact-cta address a { color: inherit; text-decoration: none; }
 
 
@@ -657,6 +649,7 @@
   /* ---------- Footer (blue) ---------- */
   .site-footer {
     position: relative;
+    z-index: 1;                        /* scrolls up over the pinned contact section */
     min-height: 100vh;                 /* fills the screen; columns stretch, wordmark + legal sit at the bottom */
     display: flex;
     flex-direction: column;
@@ -668,7 +661,6 @@
     font-weight: 350;
     font-size: 16px;
   }
-  .site-footer .grid-guides { top: 0; bottom: 0; }
   .site-footer a { color: inherit; text-decoration: none; }
   .site-footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
   .footer-columns {
@@ -690,7 +682,8 @@
   .footer-tagline {
     font-family: var(--font-title);
     font-weight: 300;
-    font-size: 16px;
+    font-size: 20px;
+    line-height: 24px;               /* set in Paper */
     text-transform: uppercase;
   }
   .footer-mark {                     /* pegasus + Est. "floating" in the middle of the space above the wordmark */
@@ -713,9 +706,10 @@
     font-size: 12px;
     text-transform: uppercase;
   }
-  .footer-links {                    /* column 8, same links as the nav */
-    width: var(--col);
-    margin-left: calc(4 * var(--col) + 4 * var(--gutter)); /* skip columns 4–7 */
+  .footer-links {                    /* starts at column 7 (runs into 8), same links as the nav */
+    width: calc(2 * var(--col) + var(--gutter));
+    margin-left: calc(3 * var(--col) + 3 * var(--gutter)); /* skip columns 4–6 */
+    white-space: nowrap;             /* "Montana Registration" stays on one line */
     flex-shrink: 0;
     list-style: none;
     display: flex;
@@ -750,7 +744,7 @@
 
 
   /* ---------- Entrance motion ---------- */
-  :root { --slide-ease: cubic-bezier(0.22, 0.75, 0.2, 1); --slide-time: 0.9s; }
+  :root { --slide-ease: cubic-bezier(0.3, 0.8, 0.3, 1); --slide-time: 1.3s; } /* gentle start, long soft landing */
 
   /* Hero (on load): headline slides in from the page's left edge,
      subheader slides in from the left edge of the blue half */
@@ -760,7 +754,7 @@
     transition: transform var(--slide-time) var(--slide-ease), opacity var(--slide-time) var(--slide-ease);
   }
   .motion .headline { transform: translateX(calc(-100% - 40px)); }
-  .motion .subhead { transform: translateX(calc(-100% - 20px)); transition-delay: 0.15s; }
+  .motion .subhead { transform: translateX(calc(-100% - 20px)); transition-delay: 0.2s; }
   .motion.hero-in .headline,
   .motion.hero-in .subhead { transform: none; }
 
@@ -771,7 +765,7 @@
     transition: transform var(--slide-time) var(--slide-ease);
   }
   .motion .advantage-heading .line-left { transform: translateX(calc(-100% - 40px)); }
-  .motion .advantage-heading .line-right { transform: translateX(calc(100% + 40px)); transition-delay: 0.6s; }
+  .motion .advantage-heading .line-right { transform: translateX(calc(100% + 40px)); transition-delay: 0.8s; }
   .motion .advantage-heading.is-in .line-left,
   .motion .advantage-heading.is-in .line-right { transform: none; }
 
@@ -782,10 +776,10 @@
     transform: translateX(calc(-100% - 40px));
     transition: opacity 0.4s ease, transform var(--slide-time) var(--slide-ease);
   }
-  .motion .vehicle-list li:nth-child(2) { transition-delay: 0s, 0.12s; }
-  .motion .vehicle-list li:nth-child(3) { transition-delay: 0s, 0.24s; }
-  .motion .vehicle-list li:nth-child(4) { transition-delay: 0s, 0.36s; }
-  .motion .vehicle-list li:nth-child(5) { transition-delay: 0s, 0.48s; }
+  .motion .vehicle-list li:nth-child(2) { transition-delay: 0s, 0.16s; }
+  .motion .vehicle-list li:nth-child(3) { transition-delay: 0s, 0.32s; }
+  .motion .vehicle-list li:nth-child(4) { transition-delay: 0s, 0.48s; }
+  .motion .vehicle-list li:nth-child(5) { transition-delay: 0s, 0.64s; }
   .motion .vehicle-list.is-in li { transform: none; }
 
   /* Questions heading (when in view): slides in from the left */
@@ -795,33 +789,21 @@
     transition: transform var(--slide-time) var(--slide-ease);
   }
   .motion .questions-heading.is-in { transform: none; }
+  .motion .question { opacity: 0; transform: translateY(40px); transition: opacity 1.2s ease, transform 1.6s var(--slide-ease); } /* fades in and rises into place */
+  .motion .question.is-in { opacity: 1; transform: none; }
+  .motion .no-anim, .motion .no-anim * { transition: none !important; } /* already scrolled past: show in place */
 
   /* "In good company." (when in view): starts hidden behind the photo, slides out to the right into place */
   .motion .contact-cta h2 {
     transform: translateX(calc(-5 * (var(--col) + var(--gutter))));
-    transition: transform 1.1s var(--slide-ease);
+    transition: transform 1.5s var(--slide-ease);
   }
   .motion .contact-cta h2.is-in { transform: none; }
 
-  /* live size readout */
-  .readout {
-    position: fixed;
-    right: var(--margin);
-    bottom: var(--margin);
-    z-index: 2;
-    font: 12px ui-monospace, Menlo, monospace;
-    background: var(--color-black);
-    color: var(--color-off-white);
-    padding: 6px 10px;
-  }
-  body.no-grid .readout { display: none; }
 </style>
 </head>
 <body>
   <header class="hero-screen">
-  <div class="grid-guides" aria-hidden="true">
-    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-  </div>
 
   <div class="hero-photo">
     <img src="assets/hero-photo.jpg" alt="Classic cars inside a restoration garage">
@@ -873,9 +855,6 @@
   </header>
 
   <section class="advantage" id="montana-registration">
-    <div class="grid-guides grid-guides--blue" aria-hidden="true">
-      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-    </div>
     <h2 class="advantage-heading">
       <span class="line-left">A Montana advantage.</span>
       <span class="line-right">A considered approach.</span>
@@ -955,9 +934,6 @@
 
   <section class="vehicles" id="vehicles">
     <div class="vehicles-stage">
-      <div class="grid-guides grid-guides--blue" aria-hidden="true">
-        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-      </div>
       <div class="vehicle-col">
         <ul class="vehicle-list">
           <li class="is-active">Cars</li>
@@ -979,9 +955,6 @@
   </section>
 
   <section class="questions" id="questions">
-    <div class="grid-guides grid-guides--blue" aria-hidden="true">
-      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-    </div>
     <h2 class="questions-heading">A few things worth knowing.</h2>
     <div class="question-list">
       <div class="question">
@@ -1009,25 +982,19 @@
   </section>
 
   <section class="contact-cta" id="contact">
-    <div class="grid-guides grid-guides--blue" aria-hidden="true">
-      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-    </div>
     <div class="contact-photo" aria-hidden="true"></div>
     <div class="contact-cta-body">
       <h2>In good company.</h2>
       <p>The next step is a conversation. Tell us what you have in mind, and we will help you understand the way forward.</p>
       <a class="btn-2col" href="tel:+14065435803"><span>Speak with Bennett</span></a>
       <address>
-        <span>124 W Pine Street<br>Missoula, MT 59802</span>
         <a href="tel:+14065435803">(406) 543-5803</a>
+        <a href="https://www.google.com/maps/search/?api=1&amp;query=124+W+Pine+Street+Missoula+MT+59802" target="_blank" rel="noopener">124 W Pine Street<br>Missoula, MT 59802</a>
       </address>
     </div>
   </section>
 
   <footer class="site-footer">
-    <div class="grid-guides" aria-hidden="true">
-      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-    </div>
     <div class="footer-columns">
       <div class="footer-brand">
         <p class="footer-tagline">Montana vehicle registration<br>and personal legal counsel.</p>
@@ -1066,26 +1033,57 @@
     </div>
   </footer>
 
-  <div class="readout" id="readout"></div>
-
   <script>
-    // Grid guides + size readout are a design aid: shown on the local preview,
-    // hidden by default on the live site (press G to toggle either way).
-    if (!['localhost', '127.0.0.1'].includes(location.hostname)) {
-      document.body.classList.add('no-grid');
-    }
     document.getElementById('year').textContent = new Date().getFullYear();
-    const readout = document.getElementById('readout');
-    function update() {
-      const w = window.innerWidth;
-      const col = (w - 40 - 80) / 9;
-      readout.textContent = `viewport ${w}px · column ${col.toFixed(1)}px · G toggles grid`;
-    }
-    window.addEventListener('resize', update);
-    document.addEventListener('keydown', e => {
-      if (e.key === 'g' || e.key === 'G') document.body.classList.toggle('no-grid');
-    });
-    update();
+
+    /* ---------- Contact section pins at the bottom of the screen while the footer covers it ---------- */
+    (() => {
+      const cta = document.querySelector('.contact-cta');
+      if (!cta) return;
+      const setTop = () => cta.style.setProperty('--cta-top', (window.innerHeight - cta.offsetHeight) + 'px');
+      setTop();
+      window.addEventListener('resize', setTop);
+      if (window.ResizeObserver) new ResizeObserver(setTop).observe(cta);
+
+      // Footer snap: once the footer has started covering the contact section and the
+      // scroll comes to rest part-way, it glides gently on until the footer fills the
+      // screen (or, when scrolling back up, back to the contact section fully in view).
+      // Any wheel, touch or key input during the glide hands control straight back.
+      const footer = document.querySelector('.site-footer');
+      if (!footer) return;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; // ease in-out
+      let lastY = window.scrollY, dir = 1, glide = null, restTimer;
+      const stopGlide = () => { if (glide) { cancelAnimationFrame(glide); glide = null; } };
+      ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(t => window.addEventListener(t, stopGlide, { passive: true }));
+      const glideTo = target => {
+        const from = window.scrollY, dist = target - from;
+        if (Math.abs(dist) < 1) return;
+        if (reduce) { window.scrollTo(0, target); return; }
+        const duration = Math.min(1600, 700 + Math.abs(dist) * 1.2); // slower for longer distances
+        const t0 = performance.now();
+        const step = now => {
+          const t = Math.min(1, (now - t0) / duration);
+          window.scrollTo(0, from + dist * ease(t));
+          glide = t < 1 ? requestAnimationFrame(step) : null;
+        };
+        glide = requestAnimationFrame(step);
+      };
+      const snap = () => {
+        const top = footer.getBoundingClientRect().top;
+        if (top <= 1 || top >= window.innerHeight - 1) return; // not part-way
+        const footerStart = window.scrollY + top;               // page position where the footer's top meets the screen top
+        glideTo(dir > 0 ? footerStart : footerStart - window.innerHeight);
+      };
+      window.addEventListener('scroll', () => {
+        if (glide) return;                                       // our own glide, ignore
+        const y = window.scrollY;
+        if (y !== lastY) dir = y > lastY ? 1 : -1;
+        lastY = y;
+        clearTimeout(restTimer);
+        restTimer = setTimeout(snap, 250);
+      }, { passive: true });
+    })();
 
     /* ---------- Vehicles: each one lights up in turn, photo changes with it ---------- */
     (() => {
@@ -1154,11 +1152,15 @@
         photo.style.width = lerp(sr.width, vw, g) + 'px';
         photo.style.height = lerp(sr.height, vh, g) + 'px';
 
-        // phase 3: title fades in once the photo fills the screen
-        const t = reduce.matches ? (after > 0.6 * growLen ? 1 : 0) : clamp((after - 0.6 * growLen) / (0.15 * growLen));
-        fade.style.opacity = t;
-        title.style.opacity = t;
-        title.style.transform = `translate(-50%, calc(-50% + ${(1 - t) * 24}px))`;
+        // phase 3: once the photo fills the screen, the dim + title play out fully on a timer,
+        // even if scrolling stops; scrolling back up well before that point plays it back out.
+        if (after >= 0.55 * growLen) section.classList.add('title-in');   // the moment the photo fills the screen
+        else if (after < 0.54 * growLen) section.classList.remove('title-in'); // photo starts shrinking: clear the title
+        // once the photo has visibly shrunk, the title is gone outright so it never sits over the page
+        const gone = g < 0.9 && !section.classList.contains('title-in');
+        title.style.transition = gone ? 'none' : '';
+        fade.style.transition = gone ? 'none' : '';
+        title.style.visibility = gone ? 'hidden' : '';
       }
       window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(render); } }, { passive: true });
       window.addEventListener('resize', measure);
@@ -1172,11 +1174,20 @@
       if (!root.classList.contains('motion')) return;
       // Hero: once fonts are ready (so the text slides in at its final size)
       const go = () => root.classList.add('hero-in');
-      const startHero = () => { requestAnimationFrame(() => requestAnimationFrame(go)); setTimeout(go, 120); }; // timer fallback if frames are paused
+      const heroDelay = 400; // short pause before the hero lines slide in
+      const startHero = () => setTimeout(go, heroDelay);
       (document.fonts ? document.fonts.ready : Promise.resolve()).then(startHero);
       setTimeout(startHero, 1200); // fallback if fonts are slow
       // Scroll-triggered slide-ins: each plays once when ~40% of it is on screen
       // [element to watch, element that animates] — watch something that isn't moved off-screen itself
+      // Show something in its final place straight away, with no animation
+      // (used for anything the visitor has already scrolled past, e.g. after a reload near the bottom).
+      const settle = els => {
+        els.forEach(el => { el.classList.add('no-anim'); el.classList.add('is-in'); });
+        void document.body.offsetHeight; // apply the end state before transitions come back
+        setTimeout(() => els.forEach(el => el.classList.remove('no-anim')), 60);
+      };
+
       const pairs = [
         ['.advantage-heading', '.advantage-heading'],
         ['.vehicle-list', '.vehicle-list'],
@@ -1185,9 +1196,43 @@
       ].map(([w, t]) => [document.querySelector(w), document.querySelector(t)]).filter(([w, t]) => w && t);
       const targets = new Map(pairs);
       const io = new IntersectionObserver(entries => {
-        entries.forEach(e => { if (e.isIntersecting) { targets.get(e.target).classList.add('is-in'); io.unobserve(e.target); } });
+        entries.forEach(e => { if (e.isIntersecting && targets.has(e.target)) { targets.get(e.target).classList.add('is-in'); targets.delete(e.target); io.unobserve(e.target); } });
       }, { threshold: 0.2 });
       targets.forEach((_, w) => io.observe(w));
+
+      // Question rows: once the first row is well into view (its top past the lower
+      // third of the screen), every row fades in and rises into place, one after another on a timer.
+      const rows = [...document.querySelectorAll('.question')];
+      const rowGap = 350; // ms between one row starting and the next
+      let rowsPending = rows.length > 0, rowIo;
+      if (rowsPending) {
+        rowIo = new IntersectionObserver(entries => {
+          if (!rowsPending || !entries.some(e => e.isIntersecting)) return;
+          rowsPending = false;
+          rows.forEach((row, i) => setTimeout(() => row.classList.add('is-in'), i * rowGap));
+          rowIo.disconnect();
+        }, { rootMargin: '0px 0px -35% 0px' });
+        rowIo.observe(rows[0]);
+      }
+
+      // Anything already above the screen (scrolled past, or the page was reloaded lower down)
+      // appears in place instead of animating in late when the visitor scrolls back up.
+      const catchUp = () => {
+        targets.forEach((target, watch) => {
+          if (watch.getBoundingClientRect().bottom < 0) { settle([target]); targets.delete(watch); io.unobserve(watch); }
+        });
+        if (rowsPending && rows[0].getBoundingClientRect().top < 0) {
+          rowsPending = false; rowIo.disconnect(); settle(rows);
+        }
+      };
+      let catchUpQueued = false;
+      window.addEventListener('scroll', () => {
+        if (catchUpQueued) return;
+        catchUpQueued = true;
+        setTimeout(() => { catchUpQueued = false; catchUp(); }, 50);
+      }, { passive: true });
+      catchUp();
+      window.addEventListener('load', catchUp);
     })();
   </script>
 </body>
