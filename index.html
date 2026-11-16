@@ -328,43 +328,96 @@
   .vehicle-col .btn-2col { margin-top: 40px; }
 
 
-  /* ---------- Section: Situations (blue) ---------- */
+  /* ---------- Section: Situations (blue) — horizontal scroll ---------- */
+  /* The section is tall; its stage sticks to the screen while vertical
+     scrolling slides the track of six panels sideways (height set by JS). */
   .situations {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 60px;
-    padding: 120px var(--margin);
+    height: 300vh; /* fallback; JS sets the exact scroll distance */
     background: var(--color-blue);
   }
-  .situation {
-    position: relative;
-    z-index: 1;
+  .situations-stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
     display: flex;
-    align-items: flex-start; /* title and body aligned by top */
-    gap: calc(2 * var(--col) + 3 * var(--gutter)); /* skips columns 4–5 */
+    flex-direction: column;
+    justify-content: space-between;
+    padding: var(--margin);
+  }
+  .situations-track {
+    display: flex;
+    gap: var(--gutter);
+    width: max-content;
+    will-change: transform;
+  }
+  .situation-panel {                 /* each panel: 4 columns wide */
+    width: calc(4 * var(--col) + 3 * var(--gutter));
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
     padding-top: var(--gutter);
     border-top: 1px solid color-mix(in srgb, var(--color-off-white) 35%, transparent);
-  }
-  .situation h3,
-  .situation p {
-    width: calc(3 * var(--col) + 2 * var(--gutter)); /* 3 columns */
-    flex-shrink: 0;
     color: var(--color-off-white);
   }
-  .situation h3 {
+  .situation-number {
+    font-family: var(--font-title);
+    font-weight: 300;
+    font-size: 200px;
+  }
+  .situation-photo {                 /* 3 columns, 3:2 — placeholder greys until photos arrive */
+    width: calc(3 * var(--col) + 2 * var(--gutter));
+    aspect-ratio: 3 / 2;
+    background: #cccccc;
+  }
+  .situation-panel:nth-child(2) .situation-photo { background: #c2c2c2; }
+  .situation-panel:nth-child(3) .situation-photo { background: #d4d4d4; }
+  .situation-panel:nth-child(4) .situation-photo { background: #bdbdbd; }
+  .situation-panel:nth-child(5) .situation-photo { background: #c8c8c8; }
+  .situation-panel:nth-child(6) .situation-photo { background: #c5c5c5; }
+  .situation-text {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: calc(3 * var(--col) + 2 * var(--gutter));
+  }
+  .situation-text h3 {
     font-family: var(--font-title);
     font-weight: 300;
     font-size: 30px;
     text-transform: uppercase;
   }
-  .situation p {
+  .situation-text p {
     font-family: var(--font-body);
     font-weight: 350;
     font-size: 16px;
   }
+  .situations-progress {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: var(--color-off-white);
+    font-family: var(--font-body);
+    font-weight: 350;
+    font-size: 16px;
+  }
+  .situations-progress .bar {
+    position: relative;
+    flex: 1;
+    height: 1px;
+    background: color-mix(in srgb, var(--color-off-white) 35%, transparent);
+  }
+  .situations-progress .fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 1px;
+    width: 16.67%;
+    background: var(--color-off-white);
+  }
   .situations .grid-guides { top: 0; bottom: 0; }
-
 
   /* ---------- Section: Vehicles (off-white) ---------- */
   .vehicles {
@@ -637,32 +690,61 @@
   </section>
 
   <section class="situations">
-    <div class="grid-guides" aria-hidden="true">
-      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-    </div>
-    <div class="situation">
-      <h3>Before the purchase</h3>
-      <p>Considering a new acquisition? Speak with us early so ownership, registration, and documentation can be considered before the transaction is complete.</p>
-    </div>
-    <div class="situation">
-      <h3>A vehicle you<br>already own</h3>
-      <p>You do not have to be buying something new to explore Montana registration. We can review your current ownership and advise on the available next steps.</p>
-    </div>
-    <div class="situation">
-      <h3>Financing to<br>account for</h3>
-      <p>A financed vehicle brings additional requirements. We help you understand the lender permissions and documentation involved in ownership through an LLC.</p>
-    </div>
-    <div class="situation">
-      <h3>Another vehicle<br>in mind</h3>
-      <p>When you add a vehicle, we can review how it fits within your existing arrangement and help with the associated title and registration work.</p>
-    </div>
-    <div class="situation">
-      <h3>The details that<br>come around again</h3>
-      <p>Registration renewals and ongoing LLC requirements deserve consistent attention. We help you keep up with the obligations associated with your arrangement.</p>
-    </div>
-    <div class="situation">
-      <h3>When circumstances change</h3>
-      <p>A move, a sale, or a different approach to ownership may call for changes. We can assist with registration transitions and winding up an entity when it is no longer needed.</p>
+    <div class="situations-stage">
+      <div class="situations-track">
+        <article class="situation-panel">
+          <span class="situation-number" aria-hidden="true">01</span>
+          <div class="situation-photo" aria-hidden="true"></div>
+          <div class="situation-text">
+            <h3>Before the purchase</h3>
+            <p>Considering a new acquisition? Speak with us early so ownership, registration, and documentation can be considered before the transaction is complete.</p>
+          </div>
+        </article>
+        <article class="situation-panel">
+          <span class="situation-number" aria-hidden="true">02</span>
+          <div class="situation-photo" aria-hidden="true"></div>
+          <div class="situation-text">
+            <h3>A vehicle you<br>already own</h3>
+            <p>You do not have to be buying something new to explore Montana registration. We can review your current ownership and advise on the available next steps.</p>
+          </div>
+        </article>
+        <article class="situation-panel">
+          <span class="situation-number" aria-hidden="true">03</span>
+          <div class="situation-photo" aria-hidden="true"></div>
+          <div class="situation-text">
+            <h3>Financing to<br>account for</h3>
+            <p>A financed vehicle brings additional requirements. We help you understand the lender permissions and documentation involved in ownership through an LLC.</p>
+          </div>
+        </article>
+        <article class="situation-panel">
+          <span class="situation-number" aria-hidden="true">04</span>
+          <div class="situation-photo" aria-hidden="true"></div>
+          <div class="situation-text">
+            <h3>Another vehicle<br>in mind</h3>
+            <p>When you add a vehicle, we can review how it fits within your existing arrangement and help with the associated title and registration work.</p>
+          </div>
+        </article>
+        <article class="situation-panel">
+          <span class="situation-number" aria-hidden="true">05</span>
+          <div class="situation-photo" aria-hidden="true"></div>
+          <div class="situation-text">
+            <h3>The details that<br>come around again</h3>
+            <p>Registration renewals and ongoing LLC requirements deserve consistent attention. We help you keep up with the obligations associated with your arrangement.</p>
+          </div>
+        </article>
+        <article class="situation-panel">
+          <span class="situation-number" aria-hidden="true">06</span>
+          <div class="situation-photo" aria-hidden="true"></div>
+          <div class="situation-text">
+            <h3>When circumstances change</h3>
+            <p>A move, a sale, or a different approach to ownership may call for changes. We can assist with registration transitions and winding up an entity when it is no longer needed.</p>
+          </div>
+        </article>
+      </div>
+      <div class="situations-progress" aria-hidden="true">
+        <span class="count">01 / 06</span>
+        <div class="bar"><div class="fill"></div></div>
+      </div>
     </div>
   </section>
 
@@ -813,6 +895,36 @@
       }
       window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(render); } }, { passive: true });
       render();
+    })();
+    /* ---------- Situations: vertical scroll slides the panels sideways ---------- */
+    (() => {
+      const section = document.querySelector('.situations');
+      const track = section.querySelector('.situations-track');
+      const fill = section.querySelector('.situations-progress .fill');
+      const count = section.querySelector('.situations-progress .count');
+      const panels = track.children.length;
+      let distance = 0, ticking = false;
+
+      function measure() {
+        const stageWidth = document.documentElement.clientWidth - 2 * 20;
+        distance = Math.max(0, track.scrollWidth - stageWidth);
+        // one screen to hold + the sideways distance, so the slide feels 1:1 with scrolling
+        section.style.height = (window.innerHeight + distance) + 'px';
+        render();
+      }
+      function render() {
+        ticking = false;
+        const r = section.getBoundingClientRect();
+        const p = Math.min(1, Math.max(0, -r.top / Math.max(1, section.offsetHeight - window.innerHeight)));
+        track.style.transform = `translateX(${-p * distance}px)`;
+        fill.style.width = (100 / panels + p * (100 - 100 / panels)) + '%';
+        const n = Math.min(panels, 1 + Math.round(p * (panels - 1)));
+        count.textContent = String(n).padStart(2, '0') + ' / ' + String(panels).padStart(2, '0');
+      }
+      window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(render); } }, { passive: true });
+      window.addEventListener('resize', measure);
+      document.fonts.ready.then(measure);
+      measure();
     })();
   </script>
 </body>
